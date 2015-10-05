@@ -1,9 +1,9 @@
 # scraper.py
 
-
-
 # Devuelve dictionary con 'yyyy-mm-dd hh:mm:ss' como clave
-# Cada entrada contiene un diccionario con la tarifa y el precio del megawatt en Euros.
+# Cada entrada contiene un diccionario con la tarifa y el precio del megawatt en Euros:
+# precio[yyyy-mm-dd][tarifa] = euros_megawatt
+	
 def leeexcelPVPC (filename):
 
 	import xlrd
@@ -21,15 +21,19 @@ def leeexcelPVPC (filename):
 		tarifa = sheet.cell_value(i,2)
 		tramo  = int( sheet.cell_value(i,3) )
 		pvpc   = sheet.cell_value(i,4)
-		precio_key = str(datetime.datetime(yyyy,mm,dd,hh, 0, 0))
+		precio_key = "{}-{}-{}".format(yyyy,mm,dd)
 
 		try:
 			precio.__getitem__(precio_key)
 		except KeyError:
-			precio[precio_key] ={}
+			precio[precio_key] = {}
 
-		precio[precio_key][tarifa] = pvpc
+		try:
+			precio[precio_key].__getitem__(tarifa)
+		except KeyError:
+			precio[precio_key][tarifa] = []
 
+		precio[precio_key][tarifa].insert(i-5, pvpc)
 
 	return precio
 
@@ -48,9 +52,14 @@ def scrape_excel (url, filename):
 
 	return retval
 
+def scrape_PVPC (tiempo):
 
-filename = 'PVPC_DETALLE_DD_20150929'
-url = 'http://www.esios.ree.es/Solicitar?fileName=PVPC_DETALLE_DD_20150929&fileType=xls&idioma=es'
+	filename = "PVPC_DETALLE_DD_{:%Y%m%d}".format(tiempo)
+	url = "http://www.esios.ree.es/Solicitar?fileName={}&fileType=xls&idioma=es".format(filename)
+	scrape_excel(url, filename)
+	return leeexcelPVPC(filename)
 
-# scrape_excel( url, filename)
-leeexcelPVPC(filename)
+import datetime as dt
+print ( scrape_PVPC( dt.datetime.now() ) )
+
+# Volcamos a la CDN de Azure el contenido serializado a traves de pickle
