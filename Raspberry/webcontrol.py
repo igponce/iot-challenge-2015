@@ -20,19 +20,36 @@ DEFAULT_PORT = 8080
 
 class EnergyAppWebserver(http.server.BaseHTTPRequestHandler):
 
-	def lookupMethod(self):
-	    print("ASASDASD")
+	"""
+	    processMethod
+	    --------------
+	    Ejecutamos el metodo de la clase solicitado por la aplicacion a traves del path.
+	    Si no disponemos del metodo, volcamos el contenido del fichero que
+	    coincide con el path dentro del directorio 'static'.
+
+	"""
+	def processMethod(self):
+
 	    attrname = 'handle_' + self.command.upper() + "_" + self.path[1:]
-	    print ("self: {} - command: {} - path: {} - attrname: {}".format(self, self.command.upper(), self.path[:1], attrname))
-	    
-	    return getattr(self, attrname, None).__call__()
+	    retval = ''
+
+	    	retval = getattr(self, attrname, None).__call__()
+	    	return retval
+
+	    except :
+		    fp = open ('static' + self.path )
+		    retval = fp.read()
+		    fp.close()
+		    return retval
+	
  
 	# Routing "sencillo" para la aplicacion
 	# Todo se hace en los metodos handle_GET/POST_path de la clase
 	# En caso de problemas se manda un 404 (deberia ser un 500 ??)
+
 	def do_GET(self):
 		try:
-			retval = self.lookupMethod()
+			retval = self.processMethod()
 			self.send_response(200)
 			self.send_header('Content-type','text/html')
 			self.end_headers()
@@ -49,7 +66,6 @@ class EnergyAppWebserver(http.server.BaseHTTPRequestHandler):
 		return '{"yyyy-mm-dd": [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] }'
 
 	def handle_GET_index(self):
-
 		return """
 		<!DOCTYPE html>
 		<html><head><title>Hello Get</title></head>
