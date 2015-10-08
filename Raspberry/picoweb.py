@@ -62,6 +62,7 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 	# En caso de problemas se manda un 404 (deberia ser un 500 ??)
 
 	def do_GET(self):
+		attrname = 'handle_' + self.command.upper() + "_" + self.path[1:]
 		try:
 			content = self.processMethod()
 			self.send_response(200)
@@ -69,8 +70,8 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 			self.end_headers()
 			self.wfile.write(bytes(content,'UTF-8'))
 		except:
-		 	self.send_response(404)
-		 	self.end_headers()
+			self.send_response(404)
+			self.end_headers()
 
 
 if __name__ == "__main__":
