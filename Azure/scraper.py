@@ -1,6 +1,7 @@
 # scraper.py
 
-PUBLIC_WEB_DIR = 'public'
+PUBLIC_WEB_DIR = '.'
+
 # Devuelve dictionary con 'yyyy-mm-dd hh:mm:ss' como clave
 # Cada entrada contiene un diccionario con la tarifa y el precio del megawatt en Euros:
 # precio[yyyy-mm-dd][tarifa] = euros_megawatt
@@ -68,7 +69,7 @@ data = scrape_PVPC( dt.datetime.now() )
 serialized = pickle.dumps( data )
 
 # Voclamos el fichero donde 'algo' como Azure o un webserver lo pueda leer
-fp = open( PUBLIC_WEB_DIR + '/schedule.pickle', 'w', 0)
-fp.write( data )
+fp = open( PUBLIC_WEB_DIR + '/schedule.pickle', 'wb')
+fp.write( serialized )
 fp.close()
 
