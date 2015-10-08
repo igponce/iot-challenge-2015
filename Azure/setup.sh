@@ -17,3 +17,7 @@ read
 # picke
 
 # sudo apt-get install python-dev python-pickle
+
+# Azure - 
+
+pip install azure
