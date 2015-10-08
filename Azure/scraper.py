@@ -1,5 +1,6 @@
 # scraper.py
 
+PUBLIC_WEB_DIR = 'public'
 # Devuelve dictionary con 'yyyy-mm-dd hh:mm:ss' como clave
 # Cada entrada contiene un diccionario con la tarifa y el precio del megawatt en Euros:
 # precio[yyyy-mm-dd][tarifa] = euros_megawatt
@@ -59,7 +60,15 @@ def scrape_PVPC (tiempo):
 	scrape_excel(url, filename)
 	return leeexcelPVPC(filename)
 
-import datetime as dt
-print ( scrape_PVPC( dt.datetime.now() ) )
 
-# Volcamos a la CDN de Azure el contenido serializado a traves de pickle
+import datetime as dt
+import pickle
+
+data = scrape_PVPC( dt.datetime.now() )
+serialized = pickle.dumps( data )
+
+# Voclamos el fichero donde 'algo' como Azure o un webserver lo pueda leer
+fp = open( PUBLIC_WEB_DIR + '/schedule.pickle', 'w', 0)
+fp.write( data )
+fp.close()
+
