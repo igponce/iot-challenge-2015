@@ -72,6 +72,7 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 		except:
 			self.send_response(404)
 			self.end_headers()
+			self.wfile.write(bytes(sys.exc_info()),'UTF-8')
 
 
 if __name__ == "__main__":
