@@ -34,6 +34,8 @@ DEFAULT_PORT = 8080
 
 class picoWeb (http.server.BaseHTTPRequestHandler):
 
+	mime_type = 'octet-stream'
+
 	"""
 	    processMethod
 	    --------------
@@ -47,6 +49,21 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 	    attrname = 'handle_' + self.command.upper() + "_" + self.path[1:]
 	    retval = ''
 
+	    # check mime_type:
+
+	    extension = self.path[self.path.rfind('.'):]
+
+	    mime_types = {
+	    	'.css' :	'text/css',
+	    	'.js'  :	'application/javascript',
+	    	'.htm' :	'text/html',
+	    	'.html':	'text/html',
+	    	'.ico' :	'image/x-icon',
+	    	'.png' :	'image/png'
+	    }
+
+	    self.mime_type = mime_types.get(extension, 'aplicacion/octet-stream')
+
 	    try:
 	    	retval = getattr(self, attrname, None).__call__()
 	    	return retval
@@ -55,6 +72,7 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 		    fp = open ('static' + self.path )
 		    retval = fp.read()
 		    fp.close()
+
 		    return retval
  
 	# Routing "sencillo" para la aplicacion
@@ -66,7 +84,7 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 		try:
 			content = self.processMethod()
 			self.send_response(200)
-			self.send_header('Content-type','text/html')
+			self.send_header('Content-type',self.mime_type)
 			self.end_headers()
 			self.wfile.write(bytes(content,'UTF-8'))
 		except:
