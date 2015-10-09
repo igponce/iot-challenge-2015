@@ -28,32 +28,48 @@ DEALINGS IN THE SOFTWARE
 
 import sys
 import http.server
+import json
 import picoweb
 
 DEFAULT_PORT = 8080
 FICHERO_DATOS = '../Azure/schedule.pickle'
 
-precio = {}
+precios = {}
+estado = { "planificado": False, 'powerStart': 0, 'powerEnd': 0 }
+config = { "tarifa": "2.0DHA ", "powerTime": 0 }
+
+def cargaDatos (fichero):
+    import pickle
+    fp = open (FICHERO_DATOS, 'rb')
+    serialized = fp.read()
+    precios = pickle.loads( serialized )
+    fp.close()
+    return precios
 
 class EnergyAppWebserver(picoweb.picoWeb):
 
+    # Obtencion de datos
     def handle_GET_status(self):
-        return "{'ok': 'everything works okay' }"
+        return json.dumps(estado, indent=4)
 
-    def handle_GET_cost(self):
-        return '{"yyyy-mm-dd": [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] }'
+    def handle_GET_config(self):
+        return json.dumps(config, indent=4)
 
+    def handle_GET_precios(self):
+        return json.dumps(precios, sort_keys=True, indent=4)
 
-def cargaDatos (fichero)
-    fp = open ( FICHERO_DATOS)
+    def handle_POST_programar(self):
+        return json.dumps("")
+
 
 if __name__ == "__main__":
-    # get the port
-    if len(sys.argv) > 1:
-        port = int(sys.argv[1])
-    else:
-        port = DEFAULT_PORT
 
+    # if len(sys.argv) > 1
+    #     port = int(sys.argv[1])
+    # else:
+    port = DEFAULT_PORT
+
+    precios = cargaDatos(FICHERO_DATOS)
     print("Iniciando webserver en puerto: {puerto}\n\n".format(puerto=port))
     server_address = ('', port)
 
