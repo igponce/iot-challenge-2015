@@ -60,6 +60,7 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 	    	'.html':	'text/html',
 	    	'.ico' :	'image/x-icon',
 	    	'.png' :	'image/png'
+	    	'.jpg' :	'image/jpeg'
 	    }
 
 	    self.mime_type = mime_types.get(extension, 'aplicacion/octet-stream')
