@@ -1,4 +1,45 @@
-# scraper.py
+"""
+scraper.py
+
+Obtiene el fichero excel de precios de la energia de Red Electrica
+y lo trata para calcular los costes de uso de energia en distintos intervalos horarios.
+(2,3,4 horas seguidas, etc.)
+
+Salida:
+	- Fichero .json que contiene esta estructura de datos:
+
+		precio["nombre_tarifa"][intervalo_horas] = Array {
+			coste: float (coste de megawatio/h)
+			"hora_inicio": int
+			"hora_fin": int
+		}
+
+		El contenido del array está ordenado de menor a mayor coste.
+		Es decir:
+
+			precio["2.0.DHA"][4][0] <- Contiene la hora inicio y final de menor coste.
+			precio["2.0.DHA"][4][1] <- Contiene la hora de incio y final con el segundo menor coste.
+
+Copyright (C) 2015 Iñigo Gonzalez Ponce <igponce (at) gmail (dot) youknowwhat>
+
+Permission is hereby granted, free of charge, to any person obtaining 
+a copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation 
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ and/or sell copies of the Software, and to permit persons to whom the Software
+ is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included 
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+DEALINGS IN THE SOFTWARE
+"""
 
 PUBLIC_WEB_DIR = '.'
 
@@ -65,7 +106,7 @@ def scrape_PVPC (tiempo):
 import datetime as dt
 import pickle
 
-data = scrape_PVPC( dt.datetime.now() )
+#data = scrape_PVPC( dt.datetime.now() )
 serialized = pickle.dumps( data )
 
 # Voclamos el fichero donde 'algo' como Azure o un webserver lo pueda leer
