@@ -13,16 +13,19 @@ todos_costes     = [ 0. for x in range(0,12) ]
 # costePorHora     = { "2.0.DHA": list( repeat( [] ,24)) }
 # costePorDuracion = { "2.0.DHA": list(repeat( [], 24)) }
 
-costePorHora     = { "2.0.DHA": [ [0.] * 24 for i in range(24) ] }
-costePorDuracion = { "2.0.DHA": [ [0.] * 24 for i in range(24) ] }
+costePorHora     = { "2.0.DHA": [ [float('inf')] * 24 for i in range(24) ] }
+costePorDuracion = { "2.0.DHA": [ [float('inf')] * 24 for i in range(24) ] }
 
 for dia in precio.keys():
 	tarifa = precio[dia]["2.0.DHA"]
 
+	"""
 	costePorDuracion["2.0.DHA"][1] = [ tarifa[hh] for hh in range(0,23) ]
 
 	for hh in range(0,23):
 		costePorHora["2.0.DHA"][hh][1] = tarifa[hh]
+
+	"""
 
 	for interval in range(0,6):
 		todos_costes[interval] = {}
@@ -40,8 +43,8 @@ for dia in precio.keys():
 
 minCoste = [ [] for i in range(0,23) ]	
 for dur in range(0,10):
-	for tarifa in costePorDuracion.keys():
-		tempCostes = [ { 'precio': costePorHora[tarifa][dur][hh], 'tarifa': tarifa , 'hora': hh, 'intevalos': dur } for hh in range(0,23)]
+	for tt in costePorDuracion.keys():
+		tempCostes = [ { 'precio': costePorDuracion[tt][dur][hh], 'tarifa': tt , 'hora': hh, 'intevalos': dur } for hh in range(0,23) if costePorHora[tt][dur][hh] != float('inf') ]
 		minCoste[dur] = sorted( tempCostes, key = lambda v: v['precio'] if v['precio'] > 0 else 99999.)
 
 print (minCoste)
