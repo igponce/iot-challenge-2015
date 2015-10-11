@@ -24,7 +24,7 @@ for dia in precio.keys():
 	for hh in range(0,23):
 		costePorHora["2.0.DHA"][hh][1] = tarifa[hh]
 
-	for interval in range(0,10):
+	for interval in range(0,6):
 		todos_costes[interval] = {}
 
 		for hora in range(0, 24-interval):
@@ -38,10 +38,13 @@ for dia in precio.keys():
 # Obtenemos Lista de horas con menos coste para una duracion determinada:
 # minCoste[duracion] = ( hora, coste )
 
-minCoste = []
-for dur in range(1,10):
-	minCoste[dur] = 0
+minCoste = [ [] for i in range(0,23) ]	
+for dur in range(0,10):
+	for tarifa in costePorDuracion.keys():
+		tempCostes = [ { 'precio': costePorHora[tarifa][dur][hh], 'tarifa': tarifa , 'hora': hh, 'intevalos': dur } for hh in range(0,23)]
+		minCoste[dur] = sorted( tempCostes, key = lambda v: v['precio'] if v['precio'] > 0 else 99999.)
 
+print (minCoste)
 
 
 
