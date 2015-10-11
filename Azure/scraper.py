@@ -1,4 +1,4 @@
-"""
+﻿"""
 scraper.py
 
 Obtiene el fichero excel de precios de la energia de Red Electrica
@@ -42,6 +42,7 @@ DEALINGS IN THE SOFTWARE
 """
 
 PUBLIC_WEB_DIR = '.'
+OUTPUT_FILENAME = "precios.json"
 
 # Devuelve dictionary con 'yyyy-mm-dd hh:mm:ss' como clave
 # Cada entrada contiene un diccionario con la tarifa y el precio del megawatt en Euros:
@@ -101,7 +102,6 @@ def scrape_PVPC (tiempo):
 	url = "http://www.esios.ree.es/Solicitar?fileName={}&fileType=xls&idioma=es".format(filename)
 	scrape_excel(url, filename)
 	return leeexcelPVPC(filename)
-
 
 import datetime as dt
 import pickle
