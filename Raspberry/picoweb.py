@@ -59,7 +59,7 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 	    	'.htm' :	'text/html',
 	    	'.html':	'text/html',
 	    	'.ico' :	'image/x-icon',
-	    	'.png' :	'image/png'
+	    	'.png' :	'image/png',
 	    	'.jpg' :	'image/jpeg'
 	    }
 
