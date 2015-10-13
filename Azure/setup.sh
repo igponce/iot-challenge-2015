@@ -12,12 +12,8 @@ EOF
 
 read
 
-# Dependencias:
-# python-dev
-# picke
-
-# sudo apt-get install python-dev python-pickle
-
-# Azure - 
+# Dependencias: Azure, Azure-storagem y XLRD (para leer excel)
 
 pip install azure
+pip install azure-storage
+pip install xlrd
