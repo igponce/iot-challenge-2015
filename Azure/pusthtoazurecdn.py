@@ -31,16 +31,16 @@ azureAccount    = 'iotenergydemo'
 azureContainer  = 'energyprice' # URL: https://iotenergydemo.blob.core.windows.net/energyprice
 azureFile       = 'precios.pickle'
 
-import pickle
-from azure.storage.blob import BlobService
-
 def pushToAzureCDN (data):
+	
+	import pickle
+	from azure.storage.blob import BlobService
 
 	blob_service = BlobService(account_name=azureAccount, account_key=azureAccountKey)
 
 	blob_service.put_block_blob_from_bytes(
 	    azureContainer,
-	    'precios.pickle',
+	    azureFile,
 	    pickle.dumps(data),
 	    content_encoding='application/octet-stream'
 	)
