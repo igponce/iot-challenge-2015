@@ -43,14 +43,14 @@ DEALINGS IN THE SOFTWARE
 """
 
 from buscaminprecio import buscaMinPrecio
+from pushtoazurecdn import pushToAzureCDN
 
 PUBLIC_WEB_DIR = '.'
-OUTPUT_FILENAME = "precios.json"
 
 # Devuelve dictionary con 'yyyy-mm-dd hh:mm:ss' como clave
 # Cada entrada contiene un diccionario con la tarifa y el precio del megawatt en Euros:
 # precio[yyyy-mm-dd][tarifa] = euros_megawatt
-	
+
 def leeexcelPVPC (filename):
 
 	import xlrd
@@ -107,17 +107,9 @@ def scrape_PVPC (tiempo):
 	return leeexcelPVPC(filename)
 
 import datetime as dt
-import pickle
 
 precio =  scrape_PVPC( dt.datetime.now() )
 minPrecio = buscaMinPrecio( precio )
-serialized = pickle.dumps( minPrecio )
-
-# Voclamos el fichero donde 'algo' como Azure o un webserver lo pueda leer
-fp = open( PUBLIC_WEB_DIR + '/precios.pickle', 'wb')
-fp.write( serialized )
-fp.close()
-
-# Subimos el fichero a la CDN de Azure por comodidad
+pushToAzureCDN( minPrecio )
 
 
