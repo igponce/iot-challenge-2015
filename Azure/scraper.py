@@ -6,9 +6,9 @@ y lo trata para calcular los costes de uso de energia en distintos intervalos ho
 (2,3,4 horas seguidas, etc.)
 
 Salida:
-	- Fichero .json que contiene esta estructura de datos:
+	- Fichero .picke que contiene esta estructura de datos:
 
-		precio["nombre_tarifa"][intervalo_horas] = Array {
+		precio["nombre_tarifa"][intervalos_horarios] = Array {
 			coste: float (coste de megawatio/h)
 			"hora_inicio": int
 			"hora_fin": int
@@ -17,8 +17,9 @@ Salida:
 		El contenido del array está ordenado de menor a mayor coste.
 		Es decir:
 
-			precio["2.0.DHA"][4][0] <- Contiene la hora inicio y final de menor coste.
+			precio["2.0.DHA"][4][0] <- Contiene la hora inicio y final de menor coste para 5 intervalos horaris
 			precio["2.0.DHA"][4][1] <- Contiene la hora de incio y final con el segundo menor coste.
+			precio["2.0.DHA"][0][0] <- Contiene la hora mas barata del dia para la tarifa "2.0.DHA"
 
 Copyright (C) 2015 Iñigo Gonzalez Ponce <igponce (at) gmail (dot) youknowwhat>
 
@@ -40,6 +41,8 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 DEALINGS IN THE SOFTWARE
 """
+
+from buscaminprecio import buscaMinPrecio
 
 PUBLIC_WEB_DIR = '.'
 OUTPUT_FILENAME = "precios.json"
@@ -106,7 +109,12 @@ def scrape_PVPC (tiempo):
 import datetime as dt
 import pickle
 
-#data = scrape_PVPC( dt.datetime.now() )
+precio =  scrape_PVPC( dt.datetime.now() )
+minPrecio = buscaMinPrecio( precio )
+
+import pprint
+pprint.pprint (minPrecio)
+
 serialized = pickle.dumps( data )
 
 # Voclamos el fichero donde 'algo' como Azure o un webserver lo pueda leer
