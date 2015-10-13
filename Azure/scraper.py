@@ -111,14 +111,13 @@ import pickle
 
 precio =  scrape_PVPC( dt.datetime.now() )
 minPrecio = buscaMinPrecio( precio )
-
-import pprint
-pprint.pprint (minPrecio)
-
-serialized = pickle.dumps( data )
+serialized = pickle.dumps( minPrecio )
 
 # Voclamos el fichero donde 'algo' como Azure o un webserver lo pueda leer
-fp = open( PUBLIC_WEB_DIR + '/schedule.pickle', 'wb')
+fp = open( PUBLIC_WEB_DIR + '/precios.pickle', 'wb')
 fp.write( serialized )
 fp.close()
+
+# Subimos el fichero a la CDN de Azure por comodidad
+
 
