@@ -38,4 +38,9 @@ CONFIG_FILE = "config.pickle"
 ENERGY_PRICE_URL = "http://iotenergydemo.blob.core.windows.net/energyprice/precios.pickle"
 ENERGY_PRICE_FILE = "energy.pickle"
 
+
+# Fichero con programacion / estado de la configuracion
+
+PROGRAM_FILE = 'program.pickle'
+
 #EOF#
