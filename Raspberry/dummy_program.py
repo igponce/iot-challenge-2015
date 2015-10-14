@@ -30,10 +30,11 @@ DEALINGS IN THE SOFTWARE
 """
 
 import pickle
+import pprint
 from commonconfig import *
 
-programacion = {       'estado': "prog",
-                        'start': 0, 
+programacion = {       'estado': "always_off",
+                        'start': 12, 
                           'end': 1,
                   'randomdelay': 30
                   }
@@ -41,3 +42,5 @@ programacion = {       'estado': "prog",
 fp = open (PROGRAM_FILE, 'wb')
 pickle.dump( programacion, fp )
 fp.close()
+
+pprint.pprint( programacion )
