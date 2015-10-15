@@ -29,6 +29,8 @@
     margin-top: 30px;
 }
 
+#flash { display: none; }
+
 #t1  #t2  #t3  #t4  #t5  #t6  #t7  #t8  #t9  #t10
 #t11 #t12 #t13 #t14 #t15 #t16 #t17 #t18 #t19 #t20
 #t21 #t22 #t23 
@@ -93,7 +95,9 @@
 
             <br>
 
-        <input id="submit" type="submit" action="#" value="Save" />
+            <!-- bootstrap3 button/link -->
+            <input class="btn btn-default" id="guardar" type="button" value="Guardar" >
+        
       </form>
 
     </div>
@@ -107,6 +111,7 @@
         <script src="ie10-viewport-bug-workaround.js"></script>
 
     <script type="text/javascript">
+
         $(document).ready(function () {
 
             // Carga de estados
@@ -156,23 +161,33 @@
                 console.log("status change: is_disabled = " + String(is_disabled));
                 console.log($('#status').val())
 
-
             });
 
-            $('#submit').click( function() {
-                alert("click")
+            $('.container').on('click', '#guardar', function (ev) {
+                var confData = {}
+                confData.start       = $('#hora_inicio').val();
+                confData.end         = $('#hora_final').val();
+                confData.estado      = $('#estado').val();
+                confData.tarifa      = $('#tarifa').val();
+                confData.randomdelay = 30;
 
-            });
+                console.log(confData);
 
+                $.ajax({ type: 'POST', 
+                          url: '/submit', 
+                          data: confData, 
+                          success: function(foo) { alert("Guardada programacion"); }
+                      });
+
+                
+                $('#tarifa').val( config.tarifa );
+                console.log("Enviando datos por JSON...")
+                ev.stopPropagation()
+            } );
 
         });
 
-
         </script>
-
-
-
-
 
     </body>
 </html>
