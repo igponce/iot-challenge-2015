@@ -38,6 +38,17 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 
 	mime_type = 'octet-stream'
 
+	mime_types = {
+		'.css' :	'text/css',
+		'.js'  :	'application/javascript',
+		'.htm' :	'text/html',
+		'.html':	'text/html',
+		'.ico' :	'image/x-icon',
+		'.png' :	'image/png',
+		'.jpg' :	'image/jpeg'
+	}
+
+
 	"""
 	    processMethod
 	    --------------
@@ -47,16 +58,18 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 	"""
 	def processMethod(self):
 
-	    attrname = 'handle_' + self.command.upper() + "_" + self.path[1:]
+		attrname = 'handle_' + self.command.upper() + "_" + self.path[1:]
+		extension = self.path[self.path.rfind('.'):]
 
-	    try:
-	        retval = getattr(self, attrname, None).__call__()
-	        self.mime_type = mime_types.get(extension, 'aplicacion/octet-stream')
+		self.mime_type = self.mime_types.get(extension, 'aplicacion/octet-stream')
 
-	    except:
-	    	retval = None
+		try:
+		    retval = getattr(self, attrname, None).__call__()
 
-	    return retval
+		except:
+			retval = None
+
+		return retval
 
 	def processFile(self):
 
@@ -64,17 +77,7 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 
 	    extension = self.path[self.path.rfind('.'):]
 
-	    mime_types = {
-	    	'.css' :	'text/css',
-	    	'.js'  :	'application/javascript',
-	    	'.htm' :	'text/html',
-	    	'.html':	'text/html',
-	    	'.ico' :	'image/x-icon',
-	    	'.png' :	'image/png',
-	    	'.jpg' :	'image/jpeg'
-	    }
-
-	    self.mime_type = mime_types.get(extension, 'aplicacion/octet-stream')
+	    self.mime_type = self.mime_types.get(extension, 'aplicacion/octet-stream')
 	    fp = open ('static' + self.path, 'rb' )
 	    retval = fp.read()
 	    fp.close()
