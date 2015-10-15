@@ -2,11 +2,11 @@ setup.sh
 
 echo << EOF
 
-Este script instala automaticamente en la raspberry las dependencias
-necesarias para controlar los relés a través de los puertos GPIO
-y para hablar con el servidor de AZURE.
+Este script instala automaticamente en  las dependencias
+necesarias para procesar los ficheros excel de Red Electrica
+y para subir los datos a la CDN de Azure
 
-Necesita privilegios de root (!!!)
+Funciona indistintamente desde Windows y Linux.
 
 EOF
 
