@@ -38,7 +38,8 @@ from commonconfig import *
 programacion = {       'estado': "always_off",
                         'start': 12, 
                           'end': 1,
-                  'randomdelay': 30
+                  'randomdelay': 30,
+                       'tarifa': '2.0.DHA'
                   }
 
 fp = open (PROGRAM_FILE, 'wb')
