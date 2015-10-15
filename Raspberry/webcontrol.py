@@ -50,6 +50,19 @@ def cargaDatos (fichero):
 
 class EnergyAppWebserver(picoweb.picoWeb):
 
+    # post echo server
+    def do_POST(self):
+        print( self )
+        self.send_response(200)
+        self.send_header('Content-type','text/plain')
+        self.end_headers()
+        rawdata = self.rfile.read1(256)
+        # Form decode
+        kv = { k[0]: k[1] for k in [ pair.split('=') for pair in rawdata.decode('latin_1').split('&') ] }
+        print(kv)
+        self.wfile.write( b'Hello World' ) 
+        self.wfile.write( bytes(json.dumps(kv),'utf-8'))
+
     # Obtencion de datos
     def handle_GET_status(self):
 
@@ -67,6 +80,9 @@ class EnergyAppWebserver(picoweb.picoWeb):
         self.mime_type = 'application/javascript'
         return json.dumps(config, sort_keys=True, indent=4)
 
+    def handle_GET_(self):
+        self.send_response(302)
+        self.send_header("Location", 'default.html')
 
     def handle_GET_precios(self):
         try:
