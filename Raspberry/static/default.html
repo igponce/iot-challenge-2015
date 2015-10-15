@@ -11,20 +11,41 @@
         <!-- Bootstrap core CSS -->
         <link href="bootstrap.css" rel="stylesheet">
         <!-- Custom styles for this template -->
-        <link href="default.css" rel="stylesheet">
+ 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+    <style type="text/css">
+.done-true
+{
+    text-decoration: line-through;
+    color: grey;
+}
+
+.intro
+{
+    margin-top: 30px;
+}
+
+#t1  #t2  #t3  #t4  #t5  #t6  #t7  #t8  #t9  #t10
+#t11 #t12 #t13 #t14 #t15 #t16 #t17 #t18 #t19 #t20
+#t21 #t22 #t23 
+{
+    color: grey;
+}
+    </style>
+
     </head>
-    <body ng-app="powerControl">
+    <body>
 
 
-    <div class="container" ng-controller="powerConfigController">
+    <div class="container" >
+        <div id="flash"></div>
       <form novalidate class="config-form">
         <h2 style="display: block;">Power status</h2>
-           <select>
+           <select id="estado">
                 <option value="always_on" />Siempre ENCENDIDO</option>
                 <option value="always_off" />Siempre APAGADO</option>
                 <option value="prog" />Programación</option>
@@ -33,14 +54,15 @@
         <h2>Horario:</h2>
 
         Tarifa: 
-            <select>
-                <option value="always_on" />2.0.DHA</option>
-                <option value="always_on" />2.0.DHS</option>
-                <option value="always_on" />2.0.SDH</option>
+            <select id="tarifa">
+                <option value="2.0.DHA" />2.0.DHA</option>
+                <option value="2.0.DHS" />2.0.DHS</option>
+                <option value="2.0.SDH" />2.0.SDH</option>
             </select>
             <br/>
 
-            Inicio:<span id="hora_ini"></span> <input type="range" id="hora_inicio" name="inicio" value="24">
+            Inicio:<span id="hora_ini">0</span>
+            <input type="range" id="hora_inicio" name="inicio" value="0" min=0 max=23>
             <br/>
             <span id='t0'></span>
             <span id='t1'></span>
@@ -66,12 +88,12 @@
             <span id='t21'></span>
             <span id='t22'></span>
             <span id='t23'></span>
-            <input type="range" id="hora_final" name="final" value="24">
-            Final: <span id='hora_fin'></span>
+            <input type="range" id="hora_final" name="final" min=0 max=23 value=0>
+            Final: <span id='hora_fin'>0</span>
 
             <br>
 
-        <input type="submit" onClick="updateConfig" value="Save" />
+        <input id="submit" type="submit" action="#" value="Save" />
       </form>
 
     </div>
@@ -84,10 +106,67 @@
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <script src="ie10-viewport-bug-workaround.js"></script>
 
-        <script type="text/javascript">
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-            config = null
-            $.getJSON('/status',function (data) { foo = data; });
+            // Carga de estados
+
+            $.getJSON('/status',function (data) { 
+                config = data;
+                $('#hora_ini').html(config.start);
+                $('#hora_inicio').val( config.start );
+
+                $('#hora_fin').html(config.end);
+                $('#hora_final').val( config.end );
+
+                $('#estado').val( config.estado );
+                $('#tarifa').val( config.tarifa );
+
+            });
+
+            // Cargamos precios
+
+            $.getJSON('/precios',function (data) { 
+                precios = data; console.log( data )}
+             );
+
+            // Si cambia el estado del range, actualizamos el numerico.
+
+
+            $('#hora_inicio').change( function() { 
+                $('#hora_ini').html( String($('#hora_inicio').val()) )
+            });
+
+            $('#hora_final').change( function() { 
+                $('#hora_fin').html( String($('#hora_final').val()) )
+            });
+
+            $('#tarifa').change( function() {
+                console.log('cambio tarifa')
+            });
+
+            $('#estado').change( function() {
+                is_disabled = ( $('#status').val() != 'prog' )
+
+                $('#hora_inicio').prop('disabled', is_disabled);
+                $('#hora_final').prop('disabled', is_disabled);
+                $('#tarifa').prop('disabled', is_disabled);
+                $('#hora_inicio').prop('disabled', is_disabled);
+
+                console.log("status change: is_disabled = " + String(is_disabled));
+                console.log($('#status').val())
+
+
+            });
+
+            $('#submit').click( function() {
+                alert("click")
+
+            });
+
+
+        });
+
 
         </script>
 
