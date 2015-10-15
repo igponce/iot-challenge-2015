@@ -32,32 +32,39 @@ import sys
 import http.server
 import json
 import picoweb
+from commonconfig import *
 
 DEFAULT_PORT = 8080
 FICHERO_DATOS = '../Azure/schedule.pickle'
 
 precios = {}
-estado = { "planificado": False, 'powerStart': 0, 'powerEnd': 0 }
-config = { "tarifa": "2.0DHA ", "powerTime": 0 }
+
+# Config por defecto
+config = {      'estado': "always_on",
+                 'start': 12, 
+                   'end': 1,
+                'tarifa': '2.0.DHA',
+           'randomdelay': 30
+        }
 
 def cargaDatos (fichero):
     import pickle
     fp = open (FICHERO_DATOS, 'rb')
     serialized = fp.read()
-    precios = pickle.loads( serialized )
+    datos = pickle.loads( serialized )
     fp.close()
-    return precios
+    return datos
 
 class EnergyAppWebserver(picoweb.picoWeb):
 
     # Obtencion de datos
     def handle_GET_status(self):
+        config = cargaDatos (CONFIG_FILE)
         return json.dumps(estado, indent=4)
 
-    def handle_GET_config(self):
-        return json.dumps(config, indent=4)
 
     def handle_GET_precios(self):
+        precios = cargaDatos(ENERGY_PRICE_FILE)
         return json.dumps(precios, sort_keys=True, indent=4)
 
     def handle_POST_programar(self):
