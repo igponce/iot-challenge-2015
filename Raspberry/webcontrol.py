@@ -37,9 +37,10 @@ from commonconfig import *
 DEFAULT_PORT = 8080
 FICHERO_DATOS = '../Azure/schedule.pickle'
 
+# Datos de precio por defecto...
 precios = {}
 
-# Config por defecto
+# Config por defecto (se pisa cuando se carga el estado - por defecto activado)
 config = {      'estado': "always_on",
                  'start': 12, 
                    'end': 1,
@@ -59,15 +60,22 @@ class EnergyAppWebserver(picoweb.picoWeb):
 
     # Obtencion de datos
     def handle_GET_status(self):
-        config = cargaDatos (CONFIG_FILE)
-        return json.dumps(estado, indent=4)
+        # Si no existe fichero -> valores por defecto (a fuego)
+        try:
+            config = cargaDatos (CONFIG_FILE)
+        except:
+            pass
+        return json.dumps(config, indent=4)
 
 
     def handle_GET_precios(self):
-        precios = cargaDatos(ENERGY_PRICE_FILE)
+        try:
+            precios = cargaDatos(ENERGY_PRICE_FILE)
+        except:
+            pass
         return json.dumps(precios, sort_keys=True, indent=4)
 
-    def handle_POST_programar(self):
+    def handle_GET_setstatus(self):
         return json.dumps("")
 
 
