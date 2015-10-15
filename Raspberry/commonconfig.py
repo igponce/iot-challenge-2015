@@ -43,6 +43,6 @@ ENERGY_PRICE_FILE = "energy.pickle"
 
 # Fichero con programacion / estado de la configuracion
 
-PROGRAM_FILE = 'program.pickle'
+PROGRAM_FILE = 'config.pickle'
 
 #EOF#
