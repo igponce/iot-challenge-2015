@@ -40,17 +40,9 @@ FICHERO_DATOS = '../Azure/schedule.pickle'
 # Datos de precio por defecto...
 precios = {}
 
-# Config por defecto (se pisa cuando se carga el estado - por defecto activado)
-config = {      'estado': "always_on",
-                 'start': 12, 
-                   'end': 1,
-                'tarifa': '2.0.DHA',
-           'randomdelay': 30
-        }
-
 def cargaDatos (fichero):
     import pickle
-    fp = open (FICHERO_DATOS, 'rb')
+    fp = open (fichero, 'rb')
     serialized = fp.read()
     datos = pickle.loads( serialized )
     fp.close()
@@ -60,12 +52,20 @@ class EnergyAppWebserver(picoweb.picoWeb):
 
     # Obtencion de datos
     def handle_GET_status(self):
+
         # Si no existe fichero -> valores por defecto (a fuego)
+        config = {      'estado': "always_on",
+                         'start': 12, 
+                           'end': 1,
+                        'tarifa': '2.0.DHA',
+                   'randomdelay': 30
+                }
         try:
             config = cargaDatos (CONFIG_FILE)
         except:
             pass
-        return json.dumps(config, indent=4)
+        self.mime_type = 'application/javascript'
+        return json.dumps(config, sort_keys=True, indent=4)
 
 
     def handle_GET_precios(self):
@@ -73,6 +73,7 @@ class EnergyAppWebserver(picoweb.picoWeb):
             precios = cargaDatos(ENERGY_PRICE_FILE)
         except:
             pass
+        self.mime_type = 'application/javascript'
         return json.dumps(precios, sort_keys=True, indent=4)
 
     def handle_GET_setstatus(self):
@@ -86,7 +87,7 @@ if __name__ == "__main__":
     # else:
     port = DEFAULT_PORT
 
-    precios = cargaDatos(FICHERO_DATOS)
+    precios = cargaDatos(ENERGY_PRICE_FILE)
     print("Iniciando webserver en puerto: {puerto}\n\n".format(puerto=port))
     server_address = ('', port)
 
