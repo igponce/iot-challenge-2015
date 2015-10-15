@@ -42,14 +42,23 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 	    processMethod
 	    --------------
 	    Ejecutamos el metodo de la clase solicitado por la aplicacion a traves del path.
-	    Si no disponemos del metodo, volcamos el contenido del fichero que
-	    coincide con el path dentro del directorio 'static'.
+	    Si no disponemos del metodo, devolvemos None (y se seguira en ProcessFile. 
 
 	"""
 	def processMethod(self):
 
 	    attrname = 'handle_' + self.command.upper() + "_" + self.path[1:]
-	    retval = ''
+
+	    try:
+	        retval = getattr(self, attrname, None).__call__()
+	        self.mime_type = mime_types.get(extension, 'aplicacion/octet-stream')
+
+	    except:
+	    	retval = None
+
+	    return retval
+
+	def processFile(self):
 
 	    # check mime_type:
 
@@ -66,17 +75,11 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 	    }
 
 	    self.mime_type = mime_types.get(extension, 'aplicacion/octet-stream')
+	    fp = open ('static' + self.path, 'rb' )
+	    retval = fp.read()
+	    fp.close()
 
-	    try:
-	    	retval = getattr(self, attrname, None).__call__()
-	    	return retval
-
-	    except :
-		    fp = open ('static' + self.path, 'rb' )
-		    retval = fp.read()
-		    fp.close()
-
-		    return retval
+	    return retval
  
 	# Routing "sencillo" para la aplicacion
 	# Todo se hace en los metodos handle_GET/POST_path de la clase
@@ -86,14 +89,23 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 		attrname = 'handle_' + self.command.upper() + "_" + self.path[1:]
 		try:
 			content = self.processMethod()
-			self.send_response(200)
-			self.send_header('Content-type',self.mime_type)
-			self.end_headers()
-			self.wfile.write(bytes(content))
+			if (content == None):
+				content = self.processFile()
+				self.send_response(200)
+				self.send_header('Content-type',self.mime_type)
+				self.end_headers()
+				self.wfile.write(bytes(content))
+
+			else:
+				self.send_response(200)
+				self.send_header('Content-type',self.mime_type)
+				self.end_headers()
+				self.wfile.write(bytes(content,'UTF-8'))
+				
 		except:
 			self.send_response(404)
 			self.end_headers()
-			self.wfile.write(bytes(sys.exc_info()),'UTF-8')
+			self.wfile.write(bytes(sys.exc_info(),'ISO-8859-1'))
 
 
 if __name__ == "__main__":
