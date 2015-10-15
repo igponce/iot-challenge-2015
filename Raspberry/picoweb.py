@@ -72,7 +72,7 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 	    	return retval
 
 	    except :
-		    fp = open ('static' + self.path )
+		    fp = open ('static' + self.path, 'rb' )
 		    retval = fp.read()
 		    fp.close()
 
@@ -89,7 +89,7 @@ class picoWeb (http.server.BaseHTTPRequestHandler):
 			self.send_response(200)
 			self.send_header('Content-type',self.mime_type)
 			self.end_headers()
-			self.wfile.write(bytes(content,'UTF-8'))
+			self.wfile.write(bytes(content))
 		except:
 			self.send_response(404)
 			self.end_headers()
