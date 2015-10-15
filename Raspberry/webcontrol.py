@@ -48,6 +48,13 @@ def cargaDatos (fichero):
     fp.close()
     return datos
 
+def grabaDatos (data, fichero):
+    import pickle
+    fp = open (fichero, 'wb')
+    datos = pickle.dump( data, fp)
+    fp.close()
+    return datos
+
 class EnergyAppWebserver(picoweb.picoWeb):
 
     # post echo server
@@ -58,10 +65,8 @@ class EnergyAppWebserver(picoweb.picoWeb):
         self.end_headers()
         rawdata = self.rfile.read1(256)
         # Form decode
-        kv = { k[0]: k[1] for k in [ pair.split('=') for pair in rawdata.decode('latin_1').split('&') ] }
-        print(kv)
-        self.wfile.write( b'Hello World' ) 
-        self.wfile.write( bytes(json.dumps(kv),'utf-8'))
+        config = { k[0]: k[1] for k in [ pair.split('=') for pair in rawdata.decode('latin_1').split('&') ] }
+        grabaDatos(config, CONFIG_FILE)
 
     # Obtencion de datos
     def handle_GET_status(self):
