@@ -46,12 +46,18 @@
     <div class="container" >
         <div id="flash"></div>
       <form novalidate class="config-form">
+
+        <div id='config-top'>
         <h2 style="display: block;">Power status</h2>
            <select id="estado">
                 <option value="always_on" />Siempre ENCENDIDO</option>
                 <option value="always_off" />Siempre APAGADO</option>
                 <option value="prog" />Programación</option>
            </select>
+
+        </div>
+
+        <div id='config-bottom'>
 
         <h2>Horario:</h2>
 
@@ -94,6 +100,8 @@
             Final: <span id='hora_fin'>0</span>
 
             <br>
+
+        </div>
 
             <!-- bootstrap3 button/link -->
             <input class="btn btn-default" id="guardar" type="button" value="Guardar" >
@@ -150,16 +158,16 @@
                 console.log('cambio tarifa')
             });
 
+            // Deshabilitamos el formulario si no estamos en modo programacion
+
             $('#estado').change( function() {
-                is_disabled = ( $('#status').val() != 'prog' )
+                is_disabled = ( $('#estado').val() != 'prog' )
 
                 $('#hora_inicio').prop('disabled', is_disabled);
                 $('#hora_final').prop('disabled', is_disabled);
                 $('#tarifa').prop('disabled', is_disabled);
                 $('#hora_inicio').prop('disabled', is_disabled);
-
-                console.log("status change: is_disabled = " + String(is_disabled));
-                console.log($('#status').val())
+                $('#config-bottom').css('background-color', ( is_disabled ? '#ccc' : '#fff' ));
 
             });
 
